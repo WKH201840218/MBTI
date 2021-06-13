@@ -1,4 +1,180 @@
+
 <!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>성향별 자신과 어울리는 게임(uiux기말)</title>    
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <link href="style.css" type="text/css" rel="stylesheet" />    
+    <!-- 구글 웹 폰트 적용 -> noto sans kr -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;700;900&display=swap" rel="stylesheet">
+  </head>
+  <body class="container">
+
+    <article class="start">
+      <!-- main-title 클래스 추가 -->
+      <h1 class="main-title mt-5 text-center">나에게 어울리는 게임은?</h1>  
+      <!-- 태그 및 내용 추가 -->
+      <h2 class="sub-title mt-3 text-center">나는 어떤 장르의 게임을 하는게 좋을까?</h1>
+			<!-- 가운데 정렬을 위해 외부 div 영역 만들고, 버튼의 btn-start 클래스 추가 및 일부 수정 -->
+      <div class="start-cover mt-3 mb-3">
+        <button type="button" class="btn-start btn btn-primary" onclick='start();'>성향 알아보기</button>
+      </div>
+       <img class="imimgame" src="img/controller-1784573_640.png" alt="">
+    </article>
+
+    <article class="question">
+      <div class="progress mt-5">
+        <div
+          class="progress-bar"
+          role="progressbar"          
+          style="width: calc(100/12*1%)"  
+          aria-valuenow="25"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
+      <!-- question-content 클래스 추가 -->
+      <h2 id="title" class="question-content text-center mt-4 mb-4">문제</h2>
+      <input id="type" type="hidden" value="EI">      
+      <!-- 버튼 2개 꾸미고, 버튼 사이사이에 구분 목적의 사각형 영역 그림 -->
+      <div class="rectangle mt-5"></div>
+      <button id="A" type="button" class="btn-answer btn btn-primary pt-5 pb-5">대답A</button>
+      <div class="rectangle"></div>
+      <div class="rectangle mt-5"></div>
+      <button id="B" type="button" class="btn-answer btn btn-primary pt-5 pb-5">대답B</button>
+      <div class="rectangle"></div>
+    </article>
+
+    <article class="result">
+      <!-- 꾸밈 이미지 추가  -->
+      <!-- <img class="" src="img/longbar.png" alt="dark-slash"> -->
+      <!-- 결과 안내 메시지 추가 -->
+      <span class="result-message mt-4 mb-4">어울리는 게임 장르는???</span>
+      <div class="rectangle"></div>
+      <!-- 꾸밈 이미지 추가  -->
+      <!-- <img class="" src="img/shotbar.png" alt="up-slash">  -->
+      <!-- 위에 5 여백 추가 -->
+      <img id="img" class="rounded-circle mt-5" src="img/lion.png" alt="game">
+      <!-- result-animal 클래스 및 위/아래 여백 추가 -->
+      <h2 id="game" class="result-game text-center mt-4 mb-4">게임 장르</h2>
+      <!-- 꾸밈 이미지 추가  -->
+      <img class="" src="img/longbar.png" alt="down-slash">
+      <!-- result-explain 클래스 추가 -->
+      <h3 id="explain" class="result-explain text-center mt-4">설명</h3>
+      <!-- <div class="mid-rectangle mt-5"></div> -->
+      <!-- 사각형 영역 그리기 -->
+      <!-- <div class="rectangle mt-4 mb-4"></div> -->
+      <!-- Go to www.addthis.com/dashboard to customize your tools --> <div class="share addthis_inline_share_toolbox"></div>
+    </article>
+
+    <input type="hidden" id="EI" value="0">
+    <input type="hidden" id="SN" value="0">
+    <input type="hidden" id="TF" value="0">
+    <input type="hidden" id="JP" value="0">
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      var num = 1; 
+      var q = {
+        1: {"title": "내가 하는 게임 스토리의 중요도", "type": "EI", "A": "게임의 스토리 따위 안본다.", "B": "게임의 스토리는 굉장히 중요한 요소다."},
+        2: {"title": "나는 게임할때 지인이 있으면?", "type": "SN", "A": "게임에 끌여들여 같이 게임하는게 좋다.", "B": "게임은 나혼자 하는게 재미있다. (나만의 취미생활)"},
+        3: {"title": "게임할때 마음에 드는 그래픽", "type": "TF", "A": "3D 고화질이 마음에 든다", "B": "픽셀이나 도트같은 가벼운 화질이 마음에 든다."},
+        4: {"title": "나는 게임의 분위기가?", "type": "JP", "A": "게임은 가벼운 분위기가 좋다.", "B": "지루하고 가벼운 게임은 싫다."},
+        5: {"title": "나는 처음 게임을 찾아서 할때", "type": "EI", "A": "지인이나 대중매체를 통해 인기있는 게임을 찾아서 한다.", "B": "내가 좋아하는 장르 위주로 게임을 찾는다."},
+        6: {"title": "나의 게임의 피지컬(실력이나 반응속도)", "type": "SN", "A": "나는 반응속도가 매우좋아서 빠른게임을 선호한다.", "B": "나는 피지컬이 안좋은 편이다. 그래도 전략이나 머리 쓰는건 잘한다."},
+        7: {"title": "내가 편리한 게임시점", "type": "TF", "A": "1인칭을 선호함", "B": "3인칭 게임을 선호함"},
+        8: {"title": "게임의 시각적 청각적 선호도", "type": "JP", "A": "나는 게임할때 BGM이나 효과음을 신경을 더 많이쓴다.", "B": "나는 게임을 할때 그래픽이나 캐릭터 비주얼의 신경을 더 많이쓴다."},
+        9: {"title": "나는 게임할 시간이", "type": "EI", "A": "생각보다 많은 편이다.", "B": "일상이 바쁘다. 게임할 시간이 많이 없다."},
+        10: {"title": "나는 게임에서 패배해도?", "type": "SN", "A": "아무렇지 않다. (나는 멘탈이 강하다.)", "B": "화가 나거나 스트레스를 많이 받는다."},
+        11: {"title": "내가 하는 게임의 세계관", "type": "TF", "A": "판타지 같이 비현실적인 세계가 마음에 든다.", "B": "게임도 현실의 연장선 현실적인 세계관이 좋다."},
+        12: {"title": "나의 과금", "type": "JP", "A": "나는 게임할때 과금(현질)을 많이 하는 편이다", "B": "나는 게임할때 돈을 거의 안쓴다."}
+      }
+      var result = {
+        "ISTJ": {"game": "눈에 보이는 탄막을 쏘고 싶다! <strong>슈팅 게임</strong>", "explain": "<퐁>(pong) 이후 초기 전자 게임에 가장 많이 등장했던 게임 장르이다. 슈팅(Shooting) 게임은 플레이어가 순발력을 이용하여 직접 총기를 쏘거나, 탱크나 비행기 등 전투용 탈 것(military vehicle)을 조작하여 상대방(적)을 총기로 공격하여, 섬멸하면서 스테이지를 하나씩 클리어하는 게임을 말한다. 이후 3D 기술이 도입되면서 1인칭 시점으로 하는 게임만을 1인칭 슈팅 게임(FPS) 장르로 구분하기도 한다. 슈팅 게임의 대표작으로는 <스페이스 인베이더>(Space Invader)1), <제비우스>(Xevious)2), <갤러그>(Galaga)3), <1942>, <메탈 슬러그>(Metal Slug), <라이덴>(Raiden) 등이 있다", "img": "img/shooting game.jpg"},
+        "ISFJ": {"game": "화려하고 멋있는 액션을 보고싶다! <strong>액션 게임</strong>", "explain": "액션(Action) 게임은 플레이어의 신속한 의사결정과 동작, 그리고 그에 따른 즉각적인 결과가 특징으로, 액션 영화를 보는 것과 같은 통쾌한 재미와 통제감(sense of control)의 재미를 제공한다. 과거 전자 오락실의 게임들은 대부분 액션 게임이 주를 이루었다. 대표적인 게임으로는 대전 게임인 <버추어 파이터>, <철권> 등이 있고, 전자 오락실에서 유행했던 <동키 콩>, <슈퍼마리오> 등이 있다.", "img": "img/action game.jpg"},
+        "INFJ": {"game": "스토리를 진행하면서 모험을 떠나고 싶다! <strong>에드벤쳐 게임</strong>", "explain": "어드벤처(Adventure) 게임은 플레이어 자신이 게임 속의 주인공이 되어 주어진 시나리오를 중심으로 던전 속을 모험하면서 모험 중에 얻은 아이템과 스킬(skill)을 이용하여 사건과 문제를 풀어나가는 게임이다. 주로 1인칭 시점으로 진행되며, 3인칭 시점을 제공하는 게임도 있다. <미스트>(Myst), <원숭이 섬의 비밀>(Monkey Island) 시리즈, <페르시아의 왕자>, <툼레이더> 등이 대표적인 게임이다.", "img": "img/Adventure game.png"},
+        "INTJ": {"game": "내가 사수가 되어 적들을 화기로 적들을 쓰러뜨리고 싶다!<strong>FPS게임</strong>", "explain": "FPS(First Person Shooting)게임은 게임 플레이어가 1인칭 시점으로 게임을 플레이하는 슈팅 게임으로, 게임 화면이 진행되는 동안 자기가 직접 게임을 하고 있다는 상상을 하게 해주는 게임 장르이다. 대표작으로는 <둠>(Doom), <퀘이크>(Quake), <언리얼>(Unreal), <레인보우 식스>(Rainbow Six), <카운터 스트라이크>(Counter Strike), <하프 라이프>(Half Life) 등이 있고, 온라인으로는 <서든 어택>(Sudden Attack), <스페셜 포스>(Special Force), <아바>(Ava) 등이 대표작이다.", "img": "img/FPS game.jpg"},
+        "ISTP": {"game": "나만 살아 남으면 된다. 저 많은 사람들 중에 내가 생존왕! <strong>배틀로얄 게임</strong>", "explain": "1인칭 혹은 3인칭 슈팅 게임의 시스템을 차용하고 있으며, 시간이 흐름에 따라 좁아지는 넓은 오픈 월드맵에서 자신을 제외한 나머지를 모두 처치하고 혼자 살아남아야 하는 방식이다. 상위 장르로 액션 게임 및 생존게임이며, 대개 개인전으로 치러지지만 팀전을 허용하는 경우도 있다. 라스트 맨 스탠딩 혹은 엘리미네이션 장르 와도 비슷하지만, 좁아져 가는 월드맵에서 생존하는 요소로 구분된다. 배틀로얄 장르가 나오기 전까지는 데스매치라는 게임 모드로 작은 맵을 사용하는 비슷한 방식이 있었다. 다만 데스매치의 경우는 (반)영구적 사망 패널티가 없고 죽으면 리스폰되므로 단순히 얼마나 많이 죽였느냐가 중요하지만, 슈터게임에서 라스트 맨 스탠딩으로 발전한것이다.", "img": "img/battle royale game.jpg"},
+        "ISFP": {"game": "평범한 게임은 재미없다. 멘탈 강하고 무서운걸 좋아하는 사람들을 위한 <strong>호러 게임</strong>", "explain": "‘호러 게임’(Horror Game)은 유저에게 공포를 주거나, 공포감을 주는 요소를 전면에 내세운 게임을 말한다. 잔혹한 비주얼(Visual)로 유저들에게 공포감을 심어주는 게임들이 많기 때문에 일반적으로는 성인들을 대상으로 하는 경우가 많지만, 간혹 잔혹한 비주얼이 없어도 유저들을 ‘깜짝 깜짝’ 놀라게함으로서 공포감을 선사하는 게임들도 있기에 무조건 성인 대상의 게임이라고 하기에는 애매하다는 특징이 있다.게임은 유저 스스로가 ‘경험의 주체’가 된다는 특징이 있다. 그런 만큼 호러 게임은 다른 공포 영화나 소설에 비해 느껴지는 긴장감이 큰 편이다.", "img": "img/Horror game.jpg"},
+        "INFP": {"game": "(가상세계) 웹툰이나 만화에서 보던 신비한 경험을 하고싶은 사람을 위한 <strong>VR게임</strong>", "explain": "가상현실(VR)의 기본 개념은 '실제와 유사하지만 실제가 아닌 인공 환경'을 의미한다. 따라서 넓은 의미로 보면 플라이트 시뮬레이터 등의 시뮬레이션, 세컨드 라이프 등의게임과 같은 시각매체 역시 가상현실에 포함될 수 있다. 하지만 일반적으로 가상현실이라 말하면 단순히 가상의 공간을 구현하는 것을 넘어서서 사용자의 오감에 직접적으로 작용하여 실제에 근접한 공간적, 시간적인 체험을 가능케 하는 기술을 의미한다.", "img": "img/VR game.png"},
+        "INTP": {"game": "(증강세계) 포켓몬고 같은 증강 현실 <strong>AR게임</strong>", "explain": "증강현실과 가상현실은 서로 비슷한 듯 하지만 그 주체가 허상이냐 실상이냐에 따라 명확히 구분된다. 컴퓨터 게임으로 예를 들면, 가상현실 격투 게임은 ‘나를 대신하는 캐릭터’가 ‘가상의 공간’에서 ‘가상의 적’과 대결하지만, 증강현실 격투 게임은 ‘현실의 내’가 ‘현실의 공간’에서 가상의 적과 대결을 벌이는 형태가 된다. 때문에 증강현실이 가상현실에 비해 현실감이 뛰어나다는 특징이 있다.", "img": "img/AR game.jpg"},
+        "ESTP": {"game": "제작자는 취향을 존중합니다. <strong>성인게임</strong>", "explain": "찾는 사람만 찾는 게임이어서 여기서는 쉿!", "img": "img/18 Game.jpg"},
+        "ESFP": {"game": "꿈과 같은 판타지! 다른 말로 RPG... <strong>롤 플레잉 게임</strong>", "explain": "현대인이라면 누구나 갑갑한 현실을 벗어나 모험을 떠나고 싶다는 생각을 하기 마련이다. 현실에서의 일탈은 여행이나 드라이브 같은 선택지밖에 없지만, 상상 속에서라면 모험의 무대는 무한히 넓어진다. 어릴 적 꿈꿔 왔던 용과 요정이 사는 환상의 세계로 떠나거나, 마왕에게 잡혀 간 공주를 구하는 용사가 되는 꿈. 이러한 사람들의 소망을 대변하는 장르가 바로 RPG다. RPG는 롤플레잉 게임(Role Playing Game) 약자다. 직역하면 역할수행놀이로, 굳이 게임이 아니더라도 연극이나 심리치료 등에서 널리 쓰이는 단어다. 또한 게임 장르 RPG는 가상세계에서 모험의 주인공이 되어 이야기를 진행하는 게임을 의미한다.", "img": "img/Role Playing Game.jpg"},
+        "ENFP": {"game": "내가 하늘 위에서 바라보며 영웅 하나를 조종하고 싶다! <strong>AOS 게임</strong>", "explain": "일반적으로 장르 명칭은 게임의 특징을 대변하는 경우가 많지만, AOS는 예외다. 풀어 읽으면 Aeon Of Strife(영원한 투쟁)인데, 장르명만 봐서는 대체 어떤 게임인지 알 수 없다. 사실 AOS는 공식 장르명은 아니다. 국내에서는 AOS라는 단어를 주로 쓰지만, 해외 게임사들은 AOS 대신 MOBA(Multiplayers Online Battle Arena), ARTS(Action Real Time Strategy), Hero Brawler 등으로 통칭하는 경우가 많다. 이처럼 수많은 명칭이 혼재하는 이유는 AOS가 신생 장르이기 때문이다. 2000년대 초반에 장르성이 확립되었고, 본격적으로 활성화된 지는 고작 10년 안팎에 불과하다. 그럼에도 불구하고, AOS는 국내뿐 아니라 아시아와 유럽, 미국 등에서 가장 인기 있는 온라인게임 장르 중 하나로 손꼽힌다.", "img": "img/AOS Game.png"},
+        "ENTP": {"game": "게임에서도 운동하자! <strong>스포츠 게임</strong>", "explain": "스포츠(Sports)를 소재로 한 게임들의 총칭. 야구, 축구, 농구 등 구기 종목부터 레이싱(Racing), 격투기, 육상 등 모든 스포츠 종목을 포괄하며 그 범위와 종류는 매우 광범위하다. 스포츠 게임은 ‘스포츠’라는 소재 특성상 게임을 구현하는 기술과 플레이하는 기기 환경에 큰 영향을 받는다. 1958년 윌리암 하긴보텀(William Higinbotham)이 개발한 테니스 포 투(Tennis for Two)부터 1994년 시작된 콘솔 축구 게임 시리즈 피파 시리즈(FIFA Series)나 2010년 출시된 온라인 야구게임 마구마구까지 이용자가 게임 속 선수의 움직임을 조작하여 경기에 참여하는 방식이 주를 이루고 있다.", "img": "img/Sports Game.jpg"},
+        "ESTJ": {"game": "리듬 탈줄아는 손가락을 위한 <strong>리듬 게임</strong>", "explain": "악기를 다루지 못해도 프로처럼 음악을 연주할 수 있다면 어떨까? 리듬 게임은 이 질문에 명쾌한 해답을 던진다. 노트를 칠 손가락과 컨트롤러만 있으면 누구나 음악을 연주할 수 있다. 악기를 본 따 만든 컨트롤러로 리듬 게임을 하면 진짜 연주가가 된 듯한 기분이다. 게임의 강점 중 하나는 현실에서 하기 어려운 경험을 간접적으로 체험할 수 있다는 것이다. 이러한 점에서 리듬 게임은 악기는 다루지 못하지만 음악을 연주하고 싶다는 게이머들의 열망을 충족시켜준다", "img": "img/Rhythm Game.jpg"},
+        "ESFJ": {"game": "게임 할 시간없다. 그래도 하고싶은 사람들을 위한 <strong>방치형 게임</strong>", "explain": "특별한 조작 없이도 자동으로재화가 증가하는 게임들을 말한다. 영미권에서는 'Idle[1] 게임'이라는 표현을 쓴다. 플레이어가 아무것도 하지 않아도 된다는 게 주된 특징이다. 플레이어가 조작을 하더라도 사전에 전략을 구성하거나 진행 중 가끔 눌러주는 식으로 플레이어의 개입이 최소화 되어 있다. 장르는 RPG가 많지만, RPG의 요소 중 핵 앤 슬래쉬와 레벨업 등을 제외한 많은 요소들은 가차없이 버리고 시작하므로 상당히 미묘하다. 그 구조는 인공지능이나 육성 요소가 더해진 시뮬레이션 게임에서 접점을 찾을 수 있으나 제작자, 플레이어 층과 플레이 양상은 웹 게임/소셜 게임에 보다 가깝다.", "img": "img/clicker Game.png"},
+        "ENFJ": {"game": "다같이 즐겁게 하는 <strong>보드 게임</strong>", "explain": "블루마블과 같이 일정한 게임판(보드)을 두고 그 위에 몇 개의 말을 올려 정해진 규칙에 따라 진행하거나, 포커나 화투처럼 정해진 숫자의 카드를 통해 일정한 규칙에 따라 게임을 진행하는 종류의 게임을 모두 포괄한다.세부적으로는 카드로 게임을 진행하는 카드게임과 주사위 및 병마를 특징으로 하는 보드게임으로 나누기도 하지만, 통상적으로 둘 모두를 포괄하여 보드게임이라고 칭한다. 보드게임은 플레이어가 직접 대면하여 즐기기 때문에 주로 혼자 즐기게 되는 컴퓨터 게임과 다른 색다른 맛을 지니게 된다. 최근의 보드게임은 그 종류가 매우 다양해져서 1만여 종에 이르고 있으며, 영토확장과 재산증식에서 환경보호, 남녀평등과 같은 친사회적 소재까지 그 포괄 범위가 매우 넓다", "img": "img/board game.png"},
+        "ENTJ": {"game": "피지컬은 부족해도 머리가 좋은 것 같다. <strong>퀴즈 게임</strong>", "explain": " '‘퀴즈게임’(Quiz Game)은 주어진 문제의 답을 맞히고 점수를 획득하여 가장 많은 점수를 획득하는 사람이 승리하는 ‘퀴즈’(Quiz)를 게임으로 만든 것이다. 흔히들 ‘오락실’ 이라 불리는 아케이드 센터(Arcade Center)용 작품부터 시작해 PC온라인 게임, 모바일 게임으로도 다양한 작품들이 출시되어있는 장르다. 게임에 들어가 있는 퀴즈는 게임의 주제에 따라 천차만별이며, 게임이 개발된 시기에 따라서도 다양한 소재의 문제들이 게임에 탑재된다. 특히 퀴즈 게임은 개발된 국가에 따라 그 내용이 크게 다를 수 있다. 국가별로 역사와 문화가 다르기 때문이다.", "img": "img/Quiz game.jpg"}
+      }
+      function start() {
+        $(".start").hide();
+        $(".question").show();
+        next();
+      }
+
+      $("#A").click(function() {
+        var type = $("#type").val();        
+        var preValue = $("#"+type).val(); 
+        $("#"+type).val(parseInt(preValue)+1);
+        next();
+      })
+
+      $("#B").click(function() {             
+        next();
+      })
+
+      function next() {
+        if (num == 13) {
+          $(".question").hide();
+          $(".result").show();          
+          var mbti = "";
+          ($("#EI").val() < 2) ? mbti+="I" : mbti+="E";
+          ($("#SN").val() < 2) ? mbti+="N" : mbti+="S";
+          ($("#TF").val() < 2) ? mbti+="F" : mbti+="T";
+          ($("#JP").val() < 2) ? mbti+="P" : mbti+="J";
+          // alert(mbti);
+          $("#img").attr("src", result[mbti]["img"]);
+          $("#game").html(result[mbti]["game"]);
+          $("#explain").html(result[mbti]["explain"]);
+        } else {          
+          $(".progress-bar").attr('style', 'width: calc(100/12*'+num+'%)' );
+          $("#title").html(q[num]["title"]);
+          $("#type").val(q[num]["type"]);
+          $("#A").html(q[num]["A"]);
+          $("#B").html(q[num]["B"]);          
+          num++;
+        }        
+      }
+    </script>
+    <!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-60c6627e96ce4c2a"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,7 +195,7 @@
     </article>
 
      <article class="question" > <!--문제화면 -->
-        <div class="progress mt-5">
+        <!-- <div class="progress mt-5">
             <div class="progress-bar"
              role="progressbar"
               style="width:calc(100/12*1%) 25%"
@@ -156,4 +332,4 @@
         }
     </script>
 </body>
-</html>
+</html> -->
